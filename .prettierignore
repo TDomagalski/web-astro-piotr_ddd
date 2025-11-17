@@ -1,0 +1,9 @@
+# Ignoruj katalog build i zależności:
+dist/**
+node_modules/**
+.astro/**
+
+# Lockfile’y
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
