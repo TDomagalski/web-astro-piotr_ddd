@@ -1,7 +1,119 @@
 ---
+// You can customize these fields when including the footer.  Leaving them
+// undefined will hide the respective sections.
+interface CompanyInfo {
+	name?: string;
+	address?: string;
+	phone?: string;
+	email?: string;
+	googleMapsUrl?: string;
+	googleBusinessUrl?: string;
+}
 
+interface FooterProps {
+	/** General information about the company */
+	company?: CompanyInfo;
+	/** Attribution text or URL of the developer/agency */
+	createdBy?: string;
+	/** Year to display for copyright notice */
+	year?: number;
+}
+
+const {
+	company = {},
+	createdBy = '',
+	year = new Date().getFullYear(),
+}: FooterProps = Astro.props;
 ---
 
-<div class="flex justify-center p-2 text-center">
-	<h3>Footer</h3>
-</div>
+<footer class="bg-gray-50 text-gray-700">
+	<section
+		class="mx-auto grid w-full max-w-7xl gap-8 px-4 py-8 md:grid-cols-2 md:px-6 md:py-12 lg:px-8 lg:py-16"
+	>
+		<!-- Company details and contact information -->
+		<div>
+			{
+				company.name && (
+					<h2 class="text-lg font-semibold text-gray-900">{company.name}</h2>
+				)
+			}
+			{company.address && <p class="mt-2 text-sm">{company.address}</p>}
+			{
+				(company.phone || company.email) && (
+					<ul class="mt-4 space-y-2 text-sm">
+						{company.phone && (
+							<li>
+								<a href={`tel:${company.phone}`} class="hover:underline">
+									Telefon: {company.phone}
+								</a>
+							</li>
+						)}
+						{company.email && (
+							<li>
+								<a href={`mailto:${company.email}`} class="hover:underline">
+									E‑mail: {company.email}
+								</a>
+							</li>
+						)}
+					</ul>
+				)
+			}
+			{/* Links to Google services */}
+			{
+				(company.googleMapsUrl || company.googleBusinessUrl) && (
+					<ul class="mt-4 space-y-2 text-sm">
+						{company.googleMapsUrl && (
+							<li>
+								<a
+									href={company.googleMapsUrl}
+									class="text-blue-600 hover:underline"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									Zobacz na mapie
+								</a>
+							</li>
+						)}
+						{company.googleBusinessUrl && (
+							<li>
+								<a
+									href={company.googleBusinessUrl}
+									class="text-blue-600 hover:underline"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									Nasza wizytówka Google
+								</a>
+							</li>
+						)}
+					</ul>
+				)
+			}
+		</div>
+		<!-- Embedded Google map -->
+		{
+			company.googleMapsUrl && (
+				<div class="overflow-hidden rounded-md shadow">
+					<iframe
+						src={company.googleMapsUrl}
+						loading="lazy"
+						referrerpolicy="no-referrer-when-downgrade"
+						class="h-64 w-full border-0"
+						allowfullscreen
+						title="Lokalizacja firmy"
+					/>
+				</div>
+			)
+		}
+	</section>
+	<div class="border-t border-gray-200 py-4 text-center text-sm">
+		<p>&copy; {year} {company.name ?? ''}. Wszystkie prawa zastrzeżone.</p>
+		{
+			createdBy && (
+				<p class="mt-2">
+					Strona stworzona przez <span class="font-semibold">{createdBy}</span>
+				</p>
+			)
+		}
+	</div>
+</footer>

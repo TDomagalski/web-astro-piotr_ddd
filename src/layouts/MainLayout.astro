@@ -1,8 +1,17 @@
 ---
 import '../styles/global.css';
 
-import Navbar from '../components/layout/Navbar.astro';
+import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer.astro';
+
+const companyInfo = {
+	name: 'Moja Firma Sp. z o.o.',
+	address: 'ul. Główna 1, 00-000 Kraków',
+	phone: '+48 123 456 789',
+	email: 'kontakt@mojafirma.pl',
+	googleMapsUrl: 'https://www.google.com/maps/embed?pb=…', // pełen link embed
+	googleBusinessUrl: 'https://g.page/r/…', // link do wizytówki
+};
 ---
 
 <!doctype html>
@@ -15,10 +24,10 @@ import Footer from '../components/layout/Footer.astro';
 		<title>TomWebDev - Home Page</title>
 	</head>
 	<body>
-		<Navbar />
+		<Navbar client:load menuIcon="" closeIcon="" />
 		<div class="flex min-h-screen flex-col">
 			<slot />
 		</div>
-		<Footer />
+		<Footer company={companyInfo} createdBy="TomWebDev" />
 	</body>
 </html>
