@@ -1,17 +1,24 @@
 ---
 import '../styles/global.css';
+
+import Navbar from '../components/layout/Navbar.astro';
+import Footer from '../components/layout/Footer.astro';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="pl">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>TomWebDev - Home Page</title>
 	</head>
 	<body>
-		<slot />
+		<Navbar />
+		<div class="flex min-h-screen flex-col">
+			<slot />
+		</div>
+		<Footer />
 	</body>
 </html>
