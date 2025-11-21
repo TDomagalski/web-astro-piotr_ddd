@@ -1,102 +1,84 @@
-import { useState, useEffect } from 'react';
-import type { ReactNode } from 'react';
+import type { FC } from 'react';
+import { useState } from 'react';
 
-interface NavbarProps {
-	menuIcon: ReactNode;
-	closeIcon: ReactNode;
+// TypeScript: definiujemy strukturę pojedynczego linka nawigacyjnego
+interface NavLink {
+	label: string;
+	href: string;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ menuIcon, closeIcon }) => {
-	const [isMenuOpen, setIsMenuOpen] = useState(false);
-	const [currentPath, setCurrentPath] = useState('');
+// TypeScript: typ propsów przyjmowanych przez komponent
+interface NavbarProps {
+	currentPath: string;
+}
 
-	// Update currentPath on mount (client-side) to highlight active link
-	useEffect(() => {
-		setCurrentPath(window.location.pathname);
-	}, []);
+const navLinks: NavLink[] = [
+	{ label: 'Home', href: '/' },
+	{ label: 'Usługi', href: '/uslugi' },
+	{ label: 'Kontakt', href: '/kontakt' },
+];
 
-	// Close mobile menu if window is resized to desktop size
-	useEffect(() => {
-		const handleResize = () => {
-			if (window.innerWidth >= 768) {
-				setIsMenuOpen(false);
-			}
-		};
-		window.addEventListener('resize', handleResize);
-		return () => window.removeEventListener('resize', handleResize);
-	}, []);
-
-	// Toggle mobile menu open/close
-	const toggleMenu = () => {
-		setIsMenuOpen((prev) => !prev);
-	};
-
-	// Define navigation links (href and label)
-	const NAV_ITEMS: { href: string; label: string }[] = [
-		{ href: '/', label: 'Home' },
-		{ href: '/usługi', label: 'Usługi' },
-		{ href: '/kontakt', label: 'Kontakt' },
-		// Add more nav items as needed
-	];
+const Navbar: FC<NavbarProps> = ({ currentPath }) => {
+	const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
 	return (
-		<nav className="border-b border-gray-200 bg-white px-4 py-3">
-			<div className="mx-auto flex max-w-7xl items-center justify-between">
-				{/* Brand/Logo */}
-				<div className="text-2xl font-bold">Brand</div>
+		<nav
+			className="sticky top-0 z-10 bg-white shadow-md"
+			role="navigation"
+			aria-label="Główna nawigacja"
+		>
+			<div className="mx-auto flex max-w-7xl items-center justify-between p-4">
+				<a href="/" className="text-xl font-bold text-black">
+					Moja Strona jest super
+				</a>
 
-				{/* Desktop Menu */}
-				<div className="hidden space-x-6 md:flex">
-					{NAV_ITEMS.map((item) => (
-						<a
-							key={item.href}
-							href={item.href}
-							className={`text-gray-800 transition-colors hover:text-blue-600 ${currentPath === item.href ? 'font-semibold text-blue-600' : ''}`}
-						>
-							{item.label}
-						</a>
-					))}
-				</div>
-
-				{/* Hamburger Button (mobile) */}
+				{/* Hamburger menu (tylko na mobile) */}
 				<button
-					onClick={toggleMenu}
-					className="flex text-gray-800 focus:outline-none md:hidden"
-					aria-label="Toggle menu"
-					aria-expanded={isMenuOpen}
+					onClick={() => setMenuOpen(!menuOpen)}
+					className="p-2 text-black focus:outline-none md:hidden"
+					aria-label="Toggle Menu"
+					aria-expanded={menuOpen}
+					aria-controls="nav-links"
 				>
-					{menuIcon}
-				</button>
-			</div>
-
-			{/* Mobile Menu Overlay */}
-			<div
-				className={`fixed inset-0 flex flex-col items-center justify-center bg-white transition-all duration-300 md:hidden ${
-					isMenuOpen
-						? 'pointer-events-auto opacity-100'
-						: 'pointer-events-none opacity-0'
-				}`}
-			>
-				{/* Close button */}
-				<button
-					onClick={toggleMenu}
-					className="absolute top-4 right-4 text-gray-800 focus:outline-none"
-					aria-label="Close menu"
-				>
-					{closeIcon}
-				</button>
-
-				{/* Mobile menu links */}
-				{NAV_ITEMS.map((item) => (
-					<a
-						key={item.href}
-						href={item.href}
-						onClick={() => setIsMenuOpen(false)}
-						className={`py-2 text-2xl text-gray-800 transition-colors hover:text-blue-600 ${currentPath === item.href ? 'font-semibold text-blue-600' : ''}`}
+					<svg
+						className="h-6 w-6"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+						xmlns="http://www.w3.org/2000/svg"
 					>
-						{item.label}
-					</a>
-				))}
+						<path
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							strokeWidth={2}
+							d="M4 6h16M4 12h16M4 18h16"
+						/>
+					</svg>
+				</button>
+
+				{/* Nawigacja */}
+				<ul
+					id="nav-links"
+					className={`${
+						menuOpen ? 'block' : 'hidden'
+					} absolute top-full left-0 w-full bg-white md:static md:flex md:items-center md:justify-end md:space-x-6`}
+				>
+					{navLinks.map((link) => (
+						<li key={link.href} className="border-b md:border-none">
+							<a
+								href={link.href}
+								className={`block w-full px-4 py-2 hover:bg-gray-100 md:inline-block md:w-auto md:p-0 md:hover:bg-transparent ${
+									currentPath === link.href
+										? 'font-semibold text-blue-600'
+										: 'text-gray-800'
+								}`}
+								aria-current={currentPath === link.href ? 'page' : undefined}
+							>
+								{link.label}
+							</a>
+						</li>
+					))}
+				</ul>
 			</div>
 		</nav>
 	);

@@ -24,10 +24,10 @@ const companyInfo = {
 		<title>TomWebDev - Home Page</title>
 	</head>
 	<body>
-		<Navbar client:load menuIcon="" closeIcon="" />
 		<div class="flex min-h-screen flex-col">
+			<Navbar currentPath={Astro.url.pathname} client:load />
 			<slot />
+			<Footer company={companyInfo} />
 		</div>
-		<Footer company={companyInfo} createdBy="TomWebDev" />
 	</body>
 </html>
