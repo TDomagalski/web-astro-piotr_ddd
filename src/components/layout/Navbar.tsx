@@ -29,7 +29,7 @@ const Navbar: FC<NavbarProps> = ({ currentPath }) => {
 		>
 			<div className="mx-auto flex max-w-7xl items-center justify-between p-4">
 				<a href="/" className="text-xl font-bold text-black">
-					Moja Strona jest super
+					Moja Strona
 				</a>
 
 				{/* Hamburger menu (tylko na mobile) */}
